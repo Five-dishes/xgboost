@@ -48,6 +48,7 @@ def df_reduce(df: pd.DataFrame) -> pd.DataFrame:
 
 
 df = pd.read_csv(DIR_PATH + 'data.csv', sep=',', header=0, encoding='gbk')
+reduced = df[df['销售数量'] > 0]
 reduced = df_reduce(df)
 reduced.drop('custid', axis=1, inplace=True)
 reduced = reduced[reduced['是否促销'] == '否']  #delet element with 促销 attribute

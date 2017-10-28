@@ -11,7 +11,6 @@ Although last 2 columns will never be used...
  """
 
 import pandas as pd
-import datetime
 
 DIR_PATH = "/Users/CZH/Downloads/zero/"
 
@@ -28,12 +27,8 @@ def add_up(rows: pd.DataFrame) -> pd.Series:
     ret = pd.Series(rows.iloc[0])
     sales = len(rows)  # count unique orders instead of #sold
     ret['销售数量'] = sales
-    ret['custid'] = 0
-    day = datetime.datetime.strptime(str(ret['销售日期']), '%Y%m%d')
-    ret['day of week'] = datetime.datetime.weekday(day)
-    ret['day of week 2'] = day.strftime('%a')
     ret.drop(group_indices, inplace=True)
-
+    print(ret)
     return ret
 
 
@@ -48,9 +43,11 @@ def df_reduce(df: pd.DataFrame) -> pd.DataFrame:
 
 
 df = pd.read_csv(DIR_PATH + 'data.csv', sep=',', header=0, encoding='gbk')
-reduced = df[df['销售数量'] > 0]
+df = df[df['销售数量'] > 0]
+df = df[df['是否促销'] == '否']  #delet element with 促销 attribute
+df.drop('是否促销', axis=1, inplace=True)
+df.drop('custid', axis=1, inplace=True)
+
 reduced = df_reduce(df)
-reduced.drop('custid', axis=1, inplace=True)
-reduced = reduced[reduced['是否促销'] == '否']  #delet element with 促销 attribute
-reduced.drop('是否促销', axis=1, inplace=True)
+
 reduced.to_csv(DIR_PATH + 'processed_1.csv', sep=',')
